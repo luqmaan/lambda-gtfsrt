@@ -1,7 +1,18 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-rm bundle.zip
+set -e
+set -x
 
-zip -9 bundle.zip lambda_handler.py
+rm -rf bundle bundle.zip
+mkdir -p bundle
 
-cd .env/lib/python2.7/site-packages && zip -r9 ../../../../bundle.zip *
+pip install -r requirements.txt
+cp -r .env/lib/python2.7/site-packages/* bundle
+cp lambda_handler.py bundle
+
+# google.transit directory is missing a __init__.py
+touch bundle/google/__init__.py
+
+cd bundle
+zip -r9 ../bundle.zip *
+cd ..

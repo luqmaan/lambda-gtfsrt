@@ -41,6 +41,31 @@ def parse_trip_update(entity):
         }
 
 
+def dedupe(url):
+    feed = gtfsrt.FeedMessage()
+    res = requests.get(url)
+    feed.ParseFromString(res.content)
+
+    trip_ids = []
+    dupes = []
+
+    for entity in feed.entity:
+        if entity.vehicle:
+            trip_id = entity.vehicle.trip.trip_id
+            if trip_id not in trip_ids:
+                trip_ids.append(trip_id)
+                print(trip_id)
+            elif entity.vehicle:
+                dupes.append(entity)
+
+    print('Deleting dupes', dupes)
+
+    for entity in dupes:
+        feed.entity.remove(entity)
+
+    feed.SerializeToString()
+
+
 def fetch_feed(url):
     feed = gtfsrt.FeedMessage()
     res = requests.get(url)
@@ -62,8 +87,14 @@ def fetch_feed(url):
 
 def lambda_handler(event, ctx):
     url = event.get('url')
+    dedupe = event.get('dedupe')
 
+    if url and dedupe:
+        return dedupe(url)
     if url:
         return fetch_feed(url)
     else:
         return {'error_message': 'Requires the `url` param'}
+
+if __name__ == '__main__':
+    fetch_feed('https://data.texas.gov/download/eiei-9rpf/application/octet-stream')

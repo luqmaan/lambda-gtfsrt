@@ -14,8 +14,8 @@ virtualenv .env
 . .env/bin/activate
 pip install -r requirements-server.txt
 
-echo "start on runlevel [2345]
+sudo bash -c 'echo "start on runlevel [2345]
 stop on runlevel [016]
 
 respawn
-exec " > /etc/init/gtfsrt-server.conf
+exec /var/www/lambda-gtfsrt/start_server.sh" > /etc/init/lambda-gtfsrt.conf'

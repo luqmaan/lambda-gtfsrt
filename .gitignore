@@ -2,4 +2,5 @@
 .env
 *.zip
 __pycache__
+*.pyc
 bundle

@@ -9,7 +9,8 @@ def get_feed(url, cleanup=False):
     feed = feed_from_string(res.content)
 
     if cleanup:
-        return cleanup(feed)
+        return cleanup_feed(feed)
+
     return feed
 
 

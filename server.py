@@ -12,7 +12,7 @@ app = Flask(__name__)
 @app.route("/protobuf")
 def protobuf():
     url = request.args.get('url')
-    cleanup = request.args.get('cleanup')
+    cleanup = request.args.get('cleanup') == 'true'
     feed = get_feed(url, cleanup)
 
     return send_file(io.BytesIO(feed.SerializeToString()))
@@ -21,7 +21,7 @@ def protobuf():
 @app.route("/human")
 def human():
     url = request.args.get('url')
-    cleanup = request.args.get('cleanup')
+    cleanup = request.args.get('cleanup') == 'true'
     feed = get_feed(url, cleanup)
 
     return Response(str(feed), mimetype='text')
@@ -30,7 +30,7 @@ def human():
 @app.route("/json")
 def json():
     url = request.args.get('url')
-    cleanup = request.args.get('cleanup')
+    cleanup = request.args.get('cleanup') == 'true'
     feed = get_feed(url, cleanup)
 
     return jsonify(feed_to_dict(feed))

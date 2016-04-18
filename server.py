@@ -8,6 +8,10 @@ from gtfs_utils import get_feed, feed_to_dict
 
 app = Flask(__name__)
 
+@app.route("/")
+def hi():
+    return Response('hi', mimetype='text')
+
 
 @app.route("/protobuf")
 def protobuf():
